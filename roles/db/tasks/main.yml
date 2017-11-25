@@ -1,81 +1,52 @@
 ---
-- hosts: web
+- name: MariaDB | Instalando
+  yum:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - mariadb
+    - mariadb-server
+    - MySQL-python
 
-  tasks:
+- name: MariaDB | Iniciando o database
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
 
-  - name: Configurando repositorio EPEL
-    yum:
-      name: http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-      state: present 
- 
-  - name: Pacotes | Instalando pacotes base
-    yum:
-      name: '{{ item }}'
-      state: latest
-    with_items:
-      - httpd
-      - mod_ssl
-      - php
-      - php-fpm
-      - php-gd
-      - php-mysql
-      - php-mbstring
-      - php-mcrypt
+- name: MariaDB | Criando uma nova senha de root
+  command: openssl rand -base64 6 creates=/root/.my.cnf
+  register: mysql_root_pass
+  
+- name: MariaDB | Exibe a senha no output do playbook
+  debug: 
+    msg: "Nova senha de root {{mysql_root_pass.stdout}}"
+  when: mysql_root_pass.changed
 
-  - name: HTTPD | Iniando o apache
-    service: 
-      name: httpd
-      state: started
-      enabled: yes
+- name: MariaDB | Publicando my.cnf no home do root 
+  template: 
+    src: templates/client-my-cnf.template
+    dest: /root/.my.cnf
 
-  - name: MariaDB | Instalando
-    yum:
-      name: '{{ item }}'
-      state: latest
-    with_items:
-      - mariadb
-      - mariadb-server
-      - MySQL-python
+- name: MariaDB | Alterando a senha de root
+  mysql_user: name=root host={{ item }} password={{ mysql_root_pass }}
+  with_items:
+    - "{{ ansible_fqdn }}"
+    - ::1
+    - 127.0.0.1
+    - localhost
 
-  - name: MariaDB | Iniciando o database
-    service:
-      name: mariadb
-      state: started
-      enabled: yes
+- name: MariaDB | Removendo acesso anonimo
+  mysql_user: name="" host={{ item }} state=absent
+  with_items:
+    - localhost
+    - "{{ ansible_fqdn }}"
 
-  - name: MariaDB | Criando uma nova senha de root
-    command: openssl rand -base64 6 creates=/root/.my.cnf
-    register: mysql_root_pass
-    
-  - name: MariaDB | Exibe a senha no output do playbook
-    debug: 
-      msg: "Nova senha de root {{mysql_root_pass.stdout}}"
-    when: mysql_root_pass.changed
+- name: MariaDB | Removendo database test
+  mysql_db: name=test state=absent
 
-  - name: MariaDB | Publicando my.cnf no home do root 
-    template: 
-      src: templates/client-my-cnf.template
-      dest: /root/.my.cnf
-
-  - name: MariaDB | Alterando a senha de root
-    mysql_user: name=root host={{ item }} password={{ mysql_root_pass }}
-    with_items:
-      - "{{ ansible_fqdn }}"
-      - ::1
-      - 127.0.0.1
-      - localhost
-
-  - name: MariaDB | Removendo acesso anonimo
-    mysql_user: name="" host={{ item }} state=absent
-    with_items:
-      - localhost
-      - "{{ ansible_fqdn }}"
-
-  - name: MariaDB | Removendo database test
-    mysql_db: name=test state=absent
-
-  - name: Download Wordpress
-    unarchive:
-      src: packages/wordpress.tar.gz
-      dest: /tmp/wordpress.tar.gz
-      creates: /tmp/wordpress/wp-settings.php
+- name: Download Wordpress
+  unarchive:
+    src: packages/wordpress.tar.gz
+    dest: /tmp/wordpress.tar.gz
+    creates: /tmp/wordpress/wp-settings.php
