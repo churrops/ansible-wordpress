@@ -1,0 +1,25 @@
+---
+- name: Configurando repositorio EPEL
+  yum:
+    name: http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    state: present 
+
+- name: Pacotes | Instalando pacotes base
+  yum:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - httpd
+    - mod_ssl
+    - php
+    - php-fpm
+    - php-gd
+    - php-mysql
+    - php-mbstring
+    - php-mcrypt
+
+- name: HTTPD | Iniando o apache
+  service: 
+    name: httpd
+    state: started
+    enabled: yes
