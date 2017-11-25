@@ -1,22 +1,33 @@
 ---
+- name: Transferindo o wordpress para o servidor
+  unarchive:
+    src: /home/student/playbooks/files/wordpress.tar.gz
+    dest: /tmp/
+    creates: /tmp/wordpress/wp-settings.php
 
-- name: Criando a base pro Wordpress
-  
+- name: Publicando o wordpress no apache
+  command: cp -r /tmp/wordpress/. /var/www/html/ creates=/var/www/html/wp-settings.php
 
-- name: WP | Copiando o arquivos wp-config.php
-  copy: src=
+- name: Criando a base pro wordpress
+  mysql_db: name=wordpress state=present
+
+- name: Criando usuario na base pro wordpress
+  mysql_user: name=wordpress host=localhost password=123456 priv=wordpress.*:ALL
+
+- name: Copiando o arquivo wp-config.php
+  copy: src=/home/student/playbooks/files/wp-config.php dest=/var/www/html/wp-config.php
 
 - name: Instalando pacote python-firewall
   yum: name=python-firewall state=latest
 
 - name: Liberar as portas do apache
-  firewalld: service={{ item }} permanent=true state=enabled
-  with_items: 
-    - http
+  firewalld: service={{item}} permanent=true state=enabled
+  with_items:
+   - http
     - https
 
 - name: Recarregando o firewalld
   service: name=firewalld state=restarted
 
-- name: Ajustando a configuracao do SELinux
-  command: 
+- name: Ajustando a configuracao booleana do SELinux
+  command: setsebool -P httpd_can_network_connect_db on

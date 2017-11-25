@@ -18,7 +18,7 @@
     - php-mbstring
     - php-mcrypt
 
-- name: HTTPD | Iniando o apache
+- name: Httpd | Iniando o apache
   service: 
     name: httpd
     state: started

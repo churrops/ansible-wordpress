@@ -23,19 +23,6 @@
     msg: "Nova senha de root {{mysql_root_pass.stdout}}"
   when: mysql_root_pass.changed
 
-- name: MariaDB | Publicando my.cnf no home do root 
-  template: 
-    src: templates/client-my-cnf.template
-    dest: /root/.my.cnf
-
-- name: MariaDB | Alterando a senha de root
-  mysql_user: name=root host={{ item }} password={{ mysql_root_pass }}
-  with_items:
-    - "{{ ansible_fqdn }}"
-    - ::1
-    - 127.0.0.1
-    - localhost
-
 - name: MariaDB | Removendo acesso anonimo
   mysql_user: name="" host={{ item }} state=absent
   with_items:
@@ -45,8 +32,17 @@
 - name: MariaDB | Removendo database test
   mysql_db: name=test state=absent
 
-- name: Download Wordpress
-  unarchive:
-    src: packages/wordpress.tar.gz
-    dest: /tmp/wordpress.tar.gz
-    creates: /tmp/wordpress/wp-settings.php
+- name: MariaDB | Alterando a senha do root
+  mysql_user: name=root host={{item}} password={{mysql_root_pass.stdout}}
+  with_items:
+   - "{{ansible_fqdn}}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+  when: mysql_root_pass.changed
+
+  - name: Publicando .my.cnf no home do root
+    template:
+      src: templates/client-my-cnf.j2
+      dest: /root/.my.cnf
+    when: mysql_root_pass.changed
