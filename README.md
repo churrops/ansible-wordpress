@@ -1,10 +1,16 @@
-ANSIBLE WORDPRESS INSTALL
+<h3>>> ANSIBLE WORDPRESS INSTALL </h3>
 
+Description: 
 
-<pre>git clone https://github.com/churrops/ansible-wordpress.git</pre>
+ - RHEL/CentOS
+ - Apache Httpd
+ - MariaDB
 
-cd ansible-wordpress
+Clone git repository, and enter in directory
 
-./deploy.sh stg
+<pre>git clone https://github.com/churrops/ansible-wordpress.git
+cd ansible-wordpress</pre>
 
-./deploy.sh prd
+<pre>./deploy.sh stg</pre>
+
+<pre>./deploy.sh prd</pre>
