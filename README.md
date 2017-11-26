@@ -69,4 +69,10 @@ Run deploy
 
 After execute our deploy is created the file: <core>/root/.my.cnf</code> with the root pass for access database.
 
+<pre>$ cat /root/.my.cnf
+[client]
+user=root
+password=cfBGAllg
+</pre>
+
 Enjoy, thanks!
