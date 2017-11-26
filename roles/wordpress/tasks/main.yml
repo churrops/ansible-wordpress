@@ -2,35 +2,35 @@
 - name: Wordpress | Remove Apache welcome page
   file: name=/etc/httpd/conf.d/welcome.conf state=absent
 
-- name: Transferindo o wordpress para o servidor
+- name: Wordpress | Copy wordpress to server
   unarchive:
-    src: /home/student/playbooks/files/wordpress.tar.gz
+    src: https://wordpress.org/latest.tar.gz
     dest: /tmp/
     creates: /tmp/wordpress/wp-settings.php
 
-- name: Publicando o wordpress no apache
+- name: Wordpress | Publicando o wordpress no apache
   command: cp -r /tmp/wordpress/. /var/www/html/ creates=/var/www/html/wp-settings.php
 
-- name: Criando a base pro wordpress
-  mysql_db: name=wordpress state=present
+- name: Wordpress | Create database wordpress
+  mysql_db: name={{ wp_db_name }} state=present
 
-- name: Criando usuario na base pro wordpress
-  mysql_user: name=wordpress host=localhost password=123456 priv=wordpress.*:ALL
+- name: Wordpress | Create wordpress user in database wordpress
+  mysql_user: name={{ wp_db_user }} host={{ db_host }} password={{ wp_db_user }} priv={{ wp_db_name }}.*:ALL
 
-- name: Copiando o arquivo wp-config.php
-  copy: src=/home/student/playbooks/files/wp-config.php dest=/var/www/html/wp-config.php
+- name: Wordpress | Copy file wp-config.php
+  copy: src=templates/wp-config.php dest=/var/www/html/wp-config.php
 
-- name: Instalando pacote python-firewall
+- name: Firewalld | Install python-firewall package
   yum: name=python-firewall state=latest
 
-- name: Liberar as portas do apache
-  firewalld: service={{item}} permanent=true state=enabled
+- name: Firewalld | Allow apache ports
+  firewalld: service={{ item }} permanent=true state=enabled
   with_items:
    - http
-    - https
+   - https
 
-- name: Recarregando o firewalld
+- name: Firewalld | Recarregando o firewalld
   service: name=firewalld state=restarted
 
-- name: Ajustando a configuracao booleana do SELinux
+- name: SELinux | Ajustando a configuracao booleana do SELinux
   command: setsebool -P httpd_can_network_connect_db on
