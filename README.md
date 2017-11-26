@@ -6,6 +6,12 @@ Environment approval:
 
  - RHEL/CentOS 7.x
 
+Provisioned Setup
+
+ - Apache
+ - PHP 7.1
+ - MariaDB 
+
 <h1>Let's start</h1>
 
 <h3>Clone git repository, and access the project</h3>
