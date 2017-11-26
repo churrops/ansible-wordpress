@@ -1,13 +1,14 @@
 #!/bin/bash
+
 ENV=$1
 
 if [ -z $ENV  ]; then
-	echo "Digite o parâmetro do Ambiente"
+	echo "Please enter the parameter for the environment:"
 	echo ""
-	echo "Exemplos:"	
+	echo "Exemples:"	
 	echo ""
-	echo "	Staging 	= ./deploy.sh stg"
-	echo "	Production 	= ./deploy.sh prd"
+	echo "	Staging 	= $0 stg"
+	echo "	Production 	= $0 prd"
 	echo ""
 	exit 1
 fi

@@ -21,11 +21,15 @@ cd ansible-wordpress</pre>
 
 <h3>Configure variables for Wordpress DB</h3>
 
-You can change the variables for wordpress
+You can change the variables for wordpress, version and database conections
 
 <pre>
 $ cat group_vars/all
-# These are the WordPress database settings
+
+wp_version: 4.9
+wp_url_download: https://wordpress.org/wordpress-{{ wp_version }}.tar.gz
+
+# Wordpress database settings
 wp_db_host: localhost
 wp_db_name: wordpress
 wp_db_user: wordpress
@@ -35,7 +39,7 @@ wp_db_table_prefix: wp_
 
 <h3> Staging Deploy </h3>
 
-Edit the inventory file with our staging server
+Edit the inventory file with the IP of your Staging server
 
 <pre>$ cat inventories/stg/hosts
 [dbservers]
@@ -51,7 +55,7 @@ Run deploy
 
 <h3> Production Deploy </h3>
 
-Edit the inventory file with our staging server
+Edit the inventory file with the IP of your Production server
 
 <pre>$ cat inventories/prd/hosts
 [dbservers]

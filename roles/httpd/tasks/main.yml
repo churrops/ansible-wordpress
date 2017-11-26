@@ -6,6 +6,8 @@
   with_items:
     - https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
     - http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+#        - https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+#        - https://mirror.webtatic.com/yum/el6/latest.rpm
 
 - name: WEB | Install Packages
   yum:

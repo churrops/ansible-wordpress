@@ -4,7 +4,7 @@
 
 - name: Wordpress | Copy wordpress.tar.gz to server
   unarchive:
-    src: https://wordpress.org/latest.tar.gz
+    src: "{{ wp_url_download }}"
     dest: /tmp/
     remote_src: yes
     creates: /tmp/wordpress/wp-settings.php
