@@ -61,4 +61,12 @@ Edit the inventory file with our staging server
 192.168.100.104
 </pre>
 
+Run deploy
+
 <pre>./deploy.sh prd</pre>
+
+<h3>MySQL root pass</h3>
+
+After execute our deploy is created the file: <core>/root/.my.cnf</code> with the root pass for access database.
+
+Enjoy, thanks!
