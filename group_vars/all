@@ -4,3 +4,15 @@ wp_db_name: wordpress
 wp_db_user: wordpress
 wp_db_pass: secret
 wp_db_table_prefix: wp_
+
+
+# httpd settings
+http_serverroot: "/etc/httpd"
+http_port: 80
+http_user: apache
+http_group: apache
+http_serveradmin: root@localhost
+http_servername: www.example.com:80
+http_documentroot: "/var/www/html"
+http_errorlog: "logs/error_log"
+http_accesslog: "logs/access_log"

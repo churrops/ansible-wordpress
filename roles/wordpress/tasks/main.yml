@@ -16,7 +16,7 @@
   mysql_db: name={{ wp_db_name }} state=present
 
 - name: Wordpress | Create wordpress user in database wordpress
-  mysql_user: name={{ wp_db_user }} host={{ wp_db_host }} password={{ wp_db_user }} priv={{ wp_db_name }}.*:ALL
+  mysql_user: name={{ wp_db_user }} host={{ wp_db_host }} password={{ wp_db_pass }} priv='{{ wp_db_name }}.*:ALL' 
 
 - name: Fetch random salts for WordPress config
   local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/
@@ -41,5 +41,5 @@
 - name: Firewalld | Recarregando o firewalld
   service: name=firewalld state=restarted
 
-- name: SELinux | Ajustando a configuracao booleana do SELinux
-  command: setsebool -P httpd_can_network_connect_db on
+#- name: SELinux | Ajustando a configuracao booleana do SELinux
+#   command: setsebool -P httpd_can_network_connect_db on
