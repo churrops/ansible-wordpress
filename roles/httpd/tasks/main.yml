@@ -1,8 +1,11 @@
 ---
 - name: WEB | Add EPEL repository
   yum:
-    name: http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    name: '{{ item }}'
     state: present 
+  with_items:
+    - https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+    - http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 - name: WEB | Install Packages
   yum:
@@ -11,12 +14,12 @@
   with_items:
     - httpd
     - mod_ssl
-    - php
-    - php-fpm
-    - php-gd
-    - php-mysql
-    - php-mbstring
-    - php-mcrypt
+    - php71w
+    - php71w-fpm
+    - php71w-gd
+    - php71w-mysql
+    - php71w-mbstring
+    - php71w-mcrypt
 
 - name: WEB | Starting and Enable Apache
   service: 
