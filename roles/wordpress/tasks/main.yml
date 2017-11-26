@@ -24,7 +24,7 @@
   become: no
 
 - name: Wordpress | Copy file wp-config.php
-  copy: src=templates/wp-config.php.j2 dest=/var/www/html/wp-config.php
+  template: src=templates/wp-config.php.j2 dest=/var/www/html/wp-config.php
 
 - name: Wordpress | Set Permission
   file: path=/var/www/html/ owner=apache group=apache recurse=yes
