@@ -1,4 +1,7 @@
 ---
+- name: Wordpress | Remove Apache welcome page
+  file: name=/etc/httpd/conf.d/welcome.conf state=absent
+
 - name: Transferindo o wordpress para o servidor
   unarchive:
     src: /home/student/playbooks/files/wordpress.tar.gz

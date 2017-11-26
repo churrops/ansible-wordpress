@@ -1,5 +1,5 @@
 ---
-- name: MariaDB | Instalando
+- name: MariaDB | Install database
   yum:
     name: '{{ item }}'
     state: latest
@@ -8,41 +8,41 @@
     - mariadb-server
     - MySQL-python
 
-- name: MariaDB | Iniciando o database
+- name: MariaDB | Starting and enabled database
   service:
     name: mariadb
     state: started
     enabled: yes
 
-- name: MariaDB | Criando uma nova senha de root
+- name: MariaDB | Create a new pass for root user
   command: openssl rand -base64 6 creates=/root/.my.cnf
   register: mysql_root_pass
   
-- name: MariaDB | Exibe a senha no output do playbook
+- name: MariaDB | Display new pass in playbook  output
   debug: 
-    msg: "Nova senha de root {{mysql_root_pass.stdout}}"
+    msg: "New root pass: {{mysql_root_pass.stdout}}"
   when: mysql_root_pass.changed
 
-- name: MariaDB | Removendo acesso anonimo
+- name: MariaDB | Remove anonymous access
   mysql_user: name="" host={{ item }} state=absent
   with_items:
     - localhost
     - "{{ ansible_fqdn }}"
 
-- name: MariaDB | Removendo database test
+- name: MariaDB | Remove test database
   mysql_db: name=test state=absent
 
-- name: MariaDB | Alterando a senha do root
-  mysql_user: name=root host={{item}} password={{mysql_root_pass.stdout}}
+- name: MariaDB | Change root pass
+  mysql_user: name=root host={{ item }} password={{ mysql_root_pass.stdout }}
   with_items:
-   - "{{ansible_fqdn}}"
+    - "{{ansible_fqdn}}"
     - 127.0.0.1
     - ::1
     - localhost
   when: mysql_root_pass.changed
 
-  - name: Publicando .my.cnf no home do root
-    template:
-      src: templates/client-my-cnf.j2
-      dest: /root/.my.cnf
-    when: mysql_root_pass.changed
+- name: MariaDB | Publish file .my.cnf in the root home
+  template:
+    src: templates/client-my-cnf.j2
+    dest: /root/.my.cnf
+  when: mysql_root_pass.changed
