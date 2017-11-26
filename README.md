@@ -51,7 +51,7 @@ Edit the inventory file with the IP of your Staging server
 
 Run deploy
 
-<pre>./deploy.sh stg</pre>
+<pre>./deploy.sh stg ~/.ssh/id_rsa</pre>
 
 <h3> Production Deploy </h3>
 
@@ -67,7 +67,7 @@ Edit the inventory file with the IP of your Production server
 
 Run deploy
 
-<pre>./deploy.sh prd</pre>
+<pre>./deploy.sh prd ~/.ssh/id_rsa</pre>
 
 <h3>MySQL root pass</h3>
 
