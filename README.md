@@ -6,14 +6,14 @@ Environment approval:
 
  - RHEL/CentOS 7.x
 
-<h3>Let's start</h3>
+<h1>Let's start</h1>
 
-Clone git repository, and access the project
+<h3>Clone git repository, and access the project</h3>
 
 <pre>git clone https://github.com/churrops/ansible-wordpress.git
 cd ansible-wordpress</pre>
 
-Configure variables for Wordpress DB
+<h3>Configure variables for Wordpress DB</h3>
 
 You can change the variables for wordpress
 
