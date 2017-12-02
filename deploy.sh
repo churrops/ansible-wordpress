@@ -2,6 +2,7 @@
 
 ENV=$1
 PRIVATE_SSH_KEY=$2
+ANSIBLE_HOST_KEY_CHECKING=False
 
 if [[ -z "$ENV" || -z "$PRIVATE_SSH_KEY" ]]; then
 	echo "Please enter the parameter for the environment:"
